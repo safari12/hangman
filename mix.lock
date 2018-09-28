@@ -1,0 +1,3 @@
+%{
+  "dictionary": {:git, "https://github.com/safari12/dictionary.git", "5df6a0919ddc9652597c6e312087c0d4bfcad725", []},
+}
