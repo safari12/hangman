@@ -14,12 +14,12 @@ defmodule GameTest do
   test "state isn't changed for :won or :lost game" do
     for state <- [ :won, :lost ] do
       game = Game.new_game |> Map.put(:game_state, state)
-      assert ^game = Game.make_move(game, "x")
+      assert {^game, _} = Game.make_move(game, "x")
     end
   end
 
   test "first occurrence of letter is not already used" do
-    game = Game.new_game |> Game.make_move("x")
+    game = Game.new_game |> Game.make_move("x") |> elem(0)
     assert game.game_state != :already_used
   end
 
@@ -27,7 +27,9 @@ defmodule GameTest do
     game =
       Game.new_game
       |> Game.make_move("x")
+      |> elem(0)
       |> Game.make_move("x")
+      |> elem(0)
 
     assert game.game_state == :already_used
   end
@@ -36,6 +38,7 @@ defmodule GameTest do
     game =
       Game.new_game("wribble")
       |> Game.make_move("w")
+      |> elem(0)
 
     assert game.game_state == :good_guess
     assert game.turns_left == 7
@@ -48,6 +51,7 @@ defmodule GameTest do
       |> String.codepoints
       |> Enum.reduce(Game.new_game(word), fn c, game ->
         Game.make_move(game, c)
+        |> elem(0)
       end)
 
     assert game.game_state == :won
@@ -58,6 +62,7 @@ defmodule GameTest do
     game =
       Game.new_game("wibble")
       |> Game.make_move("x")
+      |> elem(0)
 
     assert game.game_state == :bad_guess
     assert game.turns_left == 6
@@ -68,6 +73,7 @@ defmodule GameTest do
       1..7
       |> Enum.reduce(Game.new_game("wribble"), fn c, game ->
         Game.make_move(game, c)
+        |> elem(0)
       end)
 
     assert game.game_state == :lost
